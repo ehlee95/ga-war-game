@@ -1,10 +1,6 @@
-// generate initial game state:
-
-// use loops to create 52 card objects with: rank, suit, name, owner
-
 // create arrays to hold cards, war pot, suits, and player decks
 let cards = [], pot = [], suits = ["clubs", "spades", "hearts", "diamonds"];
-let playerOneDeck = [], playerTwoDeck = [];
+let playerOneDeck = [], playerTwoDeck = [], roundCount = 1;
 
 // make 52 cards according to suits and ranks
 for(i = 0; i < suits.length; i++)
@@ -86,16 +82,18 @@ Starting conditions are set!
 // plays a round of war
 function playRound(p1, p2, pot) {
 
+    let roundText = "";
+
     // this line helps monitor game progress 
-    console.log("[CARDS LEFT] P1: " + p1.length + "  |  P2: " + p2.length);
+    displayText("Round " + roundCount + " - [CARDS IN DECK] P1: " + p1.length + "  |  P2: " + p2.length);
     
     // first checks to see if a player is out of cards, ends the game if true
     if (p1.length === 0) {
-        console.log("Player 1 is out of cards. Player 2 wins!");
+        displayText("Player 1 is out of cards. Player 2 wins!");
         return;
     }
     if (p2.length === 0) {
-        console.log("Player 2 is out of cards. Player 1 wins!");
+        displayText("Player 2 is out of cards. Player 1 wins!");
         return;
     }
 
@@ -105,18 +103,22 @@ function playRound(p1, p2, pot) {
 
     // compares cards and executes exchange for winners, or triggers a war
     if (p1card.rank > p2card.rank) {
-        console.log("Player 1 plays " + p1card.name + ". Player 2 plays " + p2card.name + ". Player 1 wins!");
+        displayText("Player 1 plays " + p1card.name + ". Player 2 plays " + p2card.name + ". Player 1 wins!");
+        displayImages(p1card.name, p2card.name);
         p1.push(p1card, p2card);
     }
     else if (p2card.rank > p1card.rank) {
-        console.log("Player 1 plays " + p1card.name + ". Player 2 plays " + p2card.name + ". Player 2 wins!");
+        displayText("Player 1 plays " + p1card.name + ". Player 2 plays " + p2card.name + ". Player 2 wins!");
+        displayImages(p1card.name, p2card.name);
         p2.push(p2card, p1card);
     }
     else {
-        console.log("Player 1 plays " + p1card.name + ". Player 2 plays " + p2card.name + ". It's a war!");
+        displayText("Player 1 plays " + p1card.name + ". Player 2 plays " + p2card.name + ". It's a war!");
+        displayImages(p1card.name, p2card.name);
         pot.push(p1card, p2card);
         war(p1, p2, pot);
     }
+    roundCount++;
 }
 
 
@@ -150,7 +152,8 @@ function war(p1, p2, pot) {
             p1.push(pot[i]);
         }
         pot.splice(0, pot.length);
-        console.log("Player 1 plays " + fourth1.name + ", beating Player 2's " + fourth2.name + ". Player 1 wins the war!");
+        displayText("Player 1 plays " + fourth1.name + ", beating Player 2's " + fourth2.name + ". Player 1 wins the war!");
+        displayImages(fourth1.name, fourth2.name);
     }
     else if (fourth2.rank > fourth1.rank) {
         p2.push(fourth1, fourth2);
@@ -158,10 +161,12 @@ function war(p1, p2, pot) {
             p2.push(pot[i]);
         }
         pot.splice(0, pot.length);
-        console.log("Player 2 plays " + fourth2.name + ", beating Player 1's " + fourth1.name + ". Player 2 wins the war!");
+        displayText("Player 2 plays " + fourth2.name + ", beating Player 1's " + fourth1.name + ". Player 2 wins the war!");
+        displayImages(fourth1.name, fourth2.name);
     }
     else {
-        console.log("Player 1 plays " + fourth1.name + ". Player 2 plays " + fourth2.name + ". It's another war!");
+        displayText("Player 1 plays " + fourth1.name + ". Player 2 plays " + fourth2.name + ". It's another war!");
+        displayImages(fourth1.name, fourth2.name);
         pot.push(fourth1, fourth2); 
         war(p1, p2, pot);
     }
@@ -175,14 +180,45 @@ function runGame(p1, p2, pot) {
         playRound(p1, p2, pot);
 
         if (p1.length === 0) {
-            console.log("Player 1 is out of cards. Player 2 wins!");
+            displayText("Player 1 is out of cards. Player 2 wins!");
             return;
         }
         if (p2.length === 0) {
-        console.log("Player 2 is out of cards. Player 1 wins!");
+        displayText("Player 2 is out of cards. Player 1 wins!");
             return;
         }
     }
 }
 
 runGame(playerOneDeck, playerTwoDeck, pot);
+
+/*
+Basic game is complete, now going to try to make it display on the browser instead of the console
+ */
+
+function displayText(text) {
+
+// create an "li" node:
+const node = document.createElement("li");
+
+// create a text node with the string passed into 'text' parameter
+const textnode = document.createTextNode(text);
+
+// append the text node to the "li" node:
+node.appendChild(textnode);
+
+// append the "li" node to the list:
+document.getElementById("main").appendChild(node);
+}
+
+function displayImages(card1, card2) {
+    const img1 = document.createElement('img');
+    const img2 = document.createElement('img');
+    img1.src = "./card-images/" + card1 + ".png";
+    img2.src = "./card-images/" + card2 + ".png";
+    img1.setAttribute("style", "margin-right: 10px; margin-top: 10px; margin-bottom: 30px; width: 156px")
+    img2.setAttribute("style", "margin-top: 10px; margin-bottom: 30px; width: 156px")
+    document.getElementById('main').appendChild(img1);
+    document.getElementById('main').appendChild(img2);
+}
+
