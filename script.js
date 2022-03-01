@@ -45,20 +45,14 @@ populateDecks(cards);
 // plays a round of war
 function playRound(p1, p2, pot) {
 
-    let roundText = "";
-
     // this line helps monitor game progress 
     displayText("Round " + roundCount + " - [CARDS IN DECK] P1: " + p1.length + "  |  P2: " + p2.length);
     
     // first checks to see if a player is out of cards, ends the game if true
-    if (p1.length === 0) {
-        displayText("Player 1 is out of cards. Player 2 wins!");
+    if (p1.length === 0)
         return;
-    }
-    if (p2.length === 0) {
-        displayText("Player 2 is out of cards. Player 1 wins!");
+    if (p2.length === 0)
         return;
-    }
 
     // draws first (zero index) card from each deck
     let p1card = p1.shift();
@@ -141,16 +135,13 @@ function runGame(p1, p2, pot) {
 
     while (p1.length !== 0 && p2.length !== 0) {
         playRound(p1, p2, pot);
+    }
 
-        if (p1.length === 0) {
-            displayText("Player 1 is out of cards. Player 2 wins!");
-            return;
-        }
-        if (p2.length === 0) {
+    if (p1.length === 0)
+        displayText("Player 1 is out of cards. Player 2 wins!");
+    if (p2.length === 0)
         displayText("Player 2 is out of cards. Player 1 wins!");
             return;
-        }
-    }
 }
 
 runGame(playerOneDeck, playerTwoDeck, pot);
@@ -164,7 +155,7 @@ function displayText(text) {
 // create an "li" node:
 const node = document.createElement("li");
 
-// create a text node with the string passed into 'text' parameter
+// reate a text node with the string passed into 'text' parameter
 const textnode = document.createTextNode(text);
 
 // append the text node to the "li" node:
@@ -179,8 +170,6 @@ function displayImages(card1, card2) {
     const img2 = document.createElement('img');
     img1.src = "./card-images/" + card1 + ".png";
     img2.src = "./card-images/" + card2 + ".png";
-    img1.setAttribute("style", "margin-right: 10px; margin-top: 10px; margin-bottom: 30px; width: 156px")
-    img2.setAttribute("style", "margin-top: 10px; margin-bottom: 30px; width: 156px")
     document.getElementById('main').appendChild(img1);
     document.getElementById('main').appendChild(img2);
 }

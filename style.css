@@ -1,3 +1,19 @@
 img {
     margin-bottom: 30px;
+    width: 156px;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+body {
+    background-color: #e8ffc7;
+    font-family: "Helvetica";
+}
+
+ul {
+    list-style-type: none;
+}
+
+h2 {
+    margin-left: 40px;
 }
