@@ -2,11 +2,6 @@
 let cards = [], pot = [], suits = ["clubs", "spades", "hearts", "diamonds"];
 let playerOneDeck = [], playerTwoDeck = [], roundCount = 1;
 
-// make 52 cards according to suits and ranks
-for(i = 0; i < suits.length; i++)
-    for(j = 0; j < 13; j++)
-        cards.push(makeCard(suits[i], j));
-
 // generate cards with starting characteristics
 function makeCard(suit, rank) {
     var card = {
@@ -23,61 +18,29 @@ function nameCard(card) {
     card.name = value[card.rank] + " of " + card.suit;
 }
 
-// randomly populates the deck arrays 
+// populates both players decks with random cards 
 function populateDecks(cards) {
-    for (i = 0; i < cards.length; i++) {
-        if (Math.round(Math.random() + 1) === 1) {
-            playerOneDeck.push(cards[i]);
-        }
-        else {
-            playerTwoDeck.push(cards[i]);
-        }
-    }
-}
-populateDecks(cards);
 
-// this method sometimes gives more cards to one player, so we need to balance the decks to start
-// we can start by making a function to pick a random card to splice out of p1 and push to p2
-function swapCard(p1, p2) {
-    let randIndex = 0;
-    if (p1.length > p2.length) {
-        randIndex = Math.floor(Math.random() * p1.length);
-        p2.push(p1.splice(randIndex, 1)[0]);
-    }
-    else {
-        randIndex = Math.floor(Math.random() * p2.length)
-        p1.push(p2.splice(randIndex, 1)[0]);
-    } 
-}
-
-// calls the swapCard function until the decks have an equal number of cards
-function balanceDecks(p1, p2) {
-    while (p1.length !== p2.length) {
-        swapCard(p1, p2);
-    }
-}
-balanceDecks(playerOneDeck, playerTwoDeck);
-
-// the decks are still organized in ascending rank/suit order, so we need to shuffle the cards
-
-function shuffle(arr) {
-    let currentIndex = arr.length,  randomIndex;
+    // make 52 cards according to suits and ranks
+    for(i = 0; i < suits.length; i++)
+        for(j = 0; j < 13; j++)
+            cards.push(makeCard(suits[i], j));
+    
+    // shuffle all cards
+    let currentIndex = cards.length, randomIndex;
     while (currentIndex != 0) {
         randomIndex = Math.floor(Math.random() * currentIndex);
         currentIndex--;
-        [arr[currentIndex], arr[randomIndex]] = [
-            arr[randomIndex], arr[currentIndex]];
+        [cards[currentIndex], cards[randomIndex]] = [
+            cards[randomIndex], cards[currentIndex]];
     }
-    return arr;
+    
+    // puts half the cards in each player's deck
+    playerOneDeck = cards.splice(0, 26);
+    playerTwoDeck = cards.splice(0, 26);
 }
-playerOneDeck = shuffle(playerOneDeck);
-playerTwoDeck = shuffle(playerTwoDeck);
 
-/*
-
-Starting conditions are set!
-
- */
+populateDecks(cards);
 
 // plays a round of war
 function playRound(p1, p2, pot) {
